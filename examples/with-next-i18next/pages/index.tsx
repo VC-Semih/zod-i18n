@@ -32,13 +32,15 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
 
 const schema = z.object({
   username: z.string().min(5),
-  email: z.string().email(),
+  email: z.email(),
   favoriteNumber: z.number().max(10).min(1),
 });
 
 export default function HookForm() {
   const { t } = useTranslation();
-  z.setErrorMap(makeZodI18nMap({ t, handlePath: { ns: ["common", "zod"] } }));
+  z.config({
+    customError: makeZodI18nMap({ t, handlePath: { ns: ["common", "zod"] } }),
+  });
   const router = useRouter();
 
   const {
