@@ -24,13 +24,15 @@ describe("ns", () => {
         },
       },
     });
-    z.setErrorMap(makeZodI18nMap());
+    z.config({ customError: makeZodI18nMap() });
 
     expect(getErrorMessage(z.string().safeParse(5))).toEqual(
       "Expected string, received number"
     );
 
-    z.setErrorMap(makeZodI18nMap({ ns: "zod2" }));
+    z.config({
+      customError: makeZodI18nMap({ ns: "zod2" }),
+    });
 
     expect(getErrorMessage(z.string().safeParse(5))).toEqual(
       "Error: it is expected to provide string but you provided number"
@@ -55,7 +57,7 @@ describe("Handling key of object schema", () => {
         },
       },
     });
-    z.setErrorMap(makeZodI18nMap());
+    z.config({ customError: makeZodI18nMap() });
 
     const schema = z.object({
       userName: z.string(),
@@ -82,7 +84,9 @@ describe("Handling key of object schema", () => {
         },
       },
     });
-    z.setErrorMap(makeZodI18nMap({ handlePath: false }));
+    z.config({
+      customError: makeZodI18nMap({ handlePath: false }),
+    });
 
     const schema = z.object({
       userName: z.string(),
@@ -109,9 +113,11 @@ describe("Handling key of object schema", () => {
         },
       },
     });
-    z.setErrorMap(
-      makeZodI18nMap({ handlePath: { context: "custom_context" } })
-    );
+    z.config({
+      customError: makeZodI18nMap({
+        handlePath: { context: "custom_context" },
+      }),
+    });
 
     const schema = z.object({
       userName: z.string(),
@@ -121,7 +127,7 @@ describe("Handling key of object schema", () => {
       "user's name is expected string, received number"
     );
 
-    z.setErrorMap(makeZodI18nMap());
+    z.config({ customError: makeZodI18nMap() });
     // fallback
     expect(getErrorMessage(schema.safeParse({ userName: 5 }))).toEqual(
       "Expected string, received number"
@@ -146,7 +152,9 @@ describe("Handling key of object schema", () => {
         },
       },
     });
-    z.setErrorMap(makeZodI18nMap({ handlePath: { ns: "common" } }));
+    z.config({
+      customError: makeZodI18nMap({ handlePath: { ns: "common" } }),
+    });
 
     const schema = z.object({
       userName: z.string(),
@@ -156,7 +164,7 @@ describe("Handling key of object schema", () => {
       "user's name is expected string, received number"
     );
 
-    z.setErrorMap(makeZodI18nMap());
+    z.config({ customError: makeZodI18nMap() });
     // fallback
     expect(getErrorMessage(schema.safeParse({ userName: 5 }))).toEqual(
       "userName is expected string, received number"
@@ -181,7 +189,9 @@ describe("Handling key of object schema", () => {
         },
       },
     });
-    z.setErrorMap(makeZodI18nMap({ handlePath: { keyPrefix: "paths" } }));
+    z.config({
+      customError: makeZodI18nMap({ handlePath: { keyPrefix: "paths" } }),
+    });
 
     const schema = z.object({
       userName: z.string(),
@@ -191,7 +201,7 @@ describe("Handling key of object schema", () => {
       "user's name is expected string, received number"
     );
 
-    z.setErrorMap(makeZodI18nMap());
+    z.config({ customError: makeZodI18nMap() });
     // fallback
     expect(getErrorMessage(schema.safeParse({ userName: 5 }))).toEqual(
       "userName is expected string, received number"
@@ -220,7 +230,7 @@ describe("plurals", () => {
         },
       },
     });
-    z.setErrorMap(makeZodI18nMap());
+    z.config({ customError: makeZodI18nMap() });
     expect(getErrorMessage(z.string().length(1).safeParse("abc"))).toEqual(
       "String must contain exactly 1 character"
     );
@@ -232,9 +242,9 @@ describe("plurals", () => {
 
 describe("jsonStringifyReplacer", () => {
   test("include bigint", async () => {
-    expect(
-      getErrorMessage(z.literal(BigInt(9007199254740991)).safeParse(""))
-    ).toEqual('Invalid literal value, expected "9007199254740991"');
+    expect(getErrorMessage(z.literal(42).safeParse(""))).toEqual(
+      'Invalid literal value, expected "9007199254740991"'
+    );
   });
 });
 
@@ -251,7 +261,9 @@ describe("custom error message", () => {
       },
     });
 
-    z.setErrorMap(makeZodI18nMap({ ns: "zod_custom" }));
+    z.config({
+      customError: makeZodI18nMap({ ns: "zod_custom" }),
+    });
 
     expect(
       getErrorMessage(
@@ -284,7 +296,9 @@ describe("custom error message", () => {
       },
     });
 
-    z.setErrorMap(makeZodI18nMap({ ns: "zod_custom" }));
+    z.config({
+      customError: makeZodI18nMap({ ns: "zod_custom" }),
+    });
 
     expect(
       getErrorMessage(

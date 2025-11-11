@@ -97,32 +97,36 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue) => {
 
   switch (issue.code) {
     case "invalid_type":
-      if (issue.expected === "undefined") {
-        message = t("errors.invalid_type_received_undefined", {
-          ns,
-          defaultValue: message,
-          ...path,
-        });
-      } else if (issue.expected === "null") {
-        message = t("errors.invalid_type_received_null", {
-          ns,
-          defaultValue: message,
-          ...path,
-        });
-      } else {
-        message = t("errors.invalid_type", {
-          expected: t(`types.${issue.expected}`, {
-            defaultValue: issue.expected,
+      switch (issue.expected) {
+        case "undefined":
+          message = t("errors.invalid_type_received_undefined", {
             ns,
-          }),
-          received: t(`types.${issue.received}`, {
-            defaultValue: issue.received,
+            defaultValue: message,
+            ...path,
+          });
+          break;
+        case "null":
+          message = t("errors.invalid_type_received_null", {
             ns,
-          }),
-          ns,
-          defaultValue: message,
-          ...path,
-        });
+            defaultValue: message,
+            ...path,
+          });
+          break;
+        default:
+          message = t("errors.invalid_type", {
+            expected: t(`types.${issue.expected}`, {
+              defaultValue: issue.expected,
+              ns,
+            }),
+            received: t(`types.${issue.received}`, {
+              defaultValue: issue.received,
+              ns,
+            }),
+            ns,
+            defaultValue: message,
+            ...path,
+          });
+          break;
       }
       break;
     case "invalid_value":

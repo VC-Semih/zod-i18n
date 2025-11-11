@@ -1,9 +1,11 @@
-import { SafeParseReturnType, ZodError } from "zod";
+import { ZodSafeParseResult, ZodError } from "zod";
 
 export const getErrorMessage = (
-  parsed: SafeParseReturnType<unknown, unknown>
+  parsed: ZodSafeParseResult<unknown>
 ): string => {
-  if ("error" in parsed) return parsed.error.issues[0].message;
+  if (parsed.error) {
+    return parsed.error.issues[0].message;
+  }
   throw new Error();
 };
 
@@ -12,7 +14,7 @@ export const getErrorMessageFromZodError = (callback: () => void) => {
     callback();
   } catch (e) {
     if (e instanceof ZodError) {
-      return e.errors[0].message;
+      return e.message;
     }
     throw e;
   }
