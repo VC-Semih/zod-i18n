@@ -1,6 +1,7 @@
 import { $ZodErrorMap } from "zod/v4/core";
 import i18next, { i18n } from "i18next";
 import { ZodLiteral, ZodEnum, ZodUnion, ZodDiscriminatedUnion } from "zod/v4";
+import { en } from "zod/locales";
 
 const jsonStringifyReplacer = (_: string, value: any): any => {
   if (typeof value === "bigint") {
@@ -11,7 +12,11 @@ const jsonStringifyReplacer = (_: string, value: any): any => {
 
 function joinValues<T extends any[]>(array: T, separator = " | "): string {
   return array
-    .map((val) => (typeof val === "string" ? `'${val}'` : val))
+    .map((val) => {
+      if (typeof val === "string") return `'${val}'`;
+      else if (typeof val === "bigint") return `${val.toString()}`;
+      return val;
+    })
     .join(separator);
 }
 
@@ -100,19 +105,20 @@ export const makeZodI18nMap: MakeZodI18nMap = (option) => (issue) => {
   };
 
   let message: string;
-  message = issue.message ?? "Invalid value";
+  const errorMsg = en().localeError(issue);
+  message = (typeof errorMsg === "string" ? errorMsg : errorMsg?.message) ?? "";
 
   const path =
-    issue?.path && !!handlePath
+    (issue.path?.length ?? 0) > 0 && !!handlePath
       ? {
           context: handlePath.context,
           path: t(
-            [handlePath.keyPrefix, issue.path.join(".")]
+            [handlePath.keyPrefix, issue.path?.join(".")]
               .filter(Boolean)
               .join("."),
             {
               ns: handlePath.ns,
-              defaultValue: issue.path.join("."),
+              defaultValue: issue.path?.join("."),
             }
           ),
         }

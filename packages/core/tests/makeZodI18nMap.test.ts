@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 import { z } from "zod";
-import { makeZodI18nMap } from "../src";
+import { makeZodI18nMap, zodI18nMap } from "../src";
 import * as i18next from "i18next";
 import { getErrorMessage } from "./helpers";
 
@@ -242,9 +242,26 @@ describe("plurals", () => {
 
 describe("jsonStringifyReplacer", () => {
   test("include bigint", async () => {
-    expect(getErrorMessage(z.literal(42).safeParse(""))).toEqual(
-      'Invalid literal value, expected "9007199254740991"'
-    );
+    await i18next.init({
+      lng: "en",
+      resources: {
+        en: {
+          zod: {
+            errors: {
+              invalid_literal: 'Invalid literal value, expected "{{expected}}"',
+            },
+          },
+        },
+      },
+    });
+
+    z.config({
+      customError: makeZodI18nMap({ ns: "zod" }),
+    });
+
+    expect(
+      getErrorMessage(z.literal(BigInt(9007199254740991)).safeParse(""))
+    ).toEqual('Invalid literal value, expected "9007199254740991"');
   });
 });
 
