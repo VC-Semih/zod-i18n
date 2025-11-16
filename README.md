@@ -1,7 +1,52 @@
 This is my shot at adapting zod-i18n-map to zod v4, it's not perfect but from my first tests, it seems to work.
 
 # Disclaimer
-### This is an experimental version, some features may be broken.
+This is an experimental version, some features may be broken. <br>
+Tests have been modified and are now passing. I tried to modify them the least possible. <br>
+Tests that were in "TODO" are commented out as it was supposedly new features to be done
+
+## Known regressions
+I had to remove these translation keys and some of their functionality
+
+---
+- invalid_arguments
+- invalid_return_type
+
+I didn't find a way to get the issue type on functions, zod was returning the same as a z.number() or z.string()
+```ts
+const functionParse = z.function({
+    input: [z.string()],
+    output: z.number(),
+});
+
+const computeFunctionParse = functionParse.implement((input) => input as any);
+expect(getErrorMessageFromZodError(() => computeFunctionParse(""))).toEqual(
+    "Expected number, received string" // invalid_arguments was used here
+);
+expect(
+    getErrorMessageFromZodError(() => computeFunctionParse(1 as any))
+).toEqual(
+    "Expected string, received number" // invalid_return_type was used here
+);
+```
+---
+- invalid_intersection_types
+
+This has been completly removed as it now throws an error instead of a returned text
+```ts
+// Error: Unmergable intersection. Error path: [] ❯ handleIntersectionResults ../../node_modules/zod/v4/core/schemas.js:1120:15 ❯ Object.inst._zod.parse
+  expect(
+    getErrorMessage(
+      z
+        .intersection(
+          z.number(),
+          z.number().transform((x) => x + 1)
+        )
+        .safeParse(1234)
+    )
+  ).toEqual("Intersection results could not be merged");
+```
+---
 
 ## Installation
 
