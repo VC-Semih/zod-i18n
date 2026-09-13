@@ -1,7 +1,10 @@
-This is my shot at adapting zod-i18n-map to zod v4, it's not perfect but from my first tests, it seems to work.
+[![npm version](https://badge.fury.io/js/@semihbou%2Fzod-i18n-map.svg)](https://badge.fury.io/js/@semihbou%2Fzod-i18n-map)
+[![codecov](https://codecov.io/github/VC-Semih/zod-i18n/graph/badge.svg?token=SNORQNODZM)](https://codecov.io/github/VC-Semih/zod-i18n)
+[![CI](https://github.com/VC-Semih/zod-i18n/actions/workflows/ci.yml/badge.svg)](https://github.com/VC-Semih/zod-i18n/actions/workflows/ci.yml)
 
+This is my shot at adapting zod-i18n-map to zod v4.
 # Disclaimer
-This is an experimental version, some features may be broken. <br>
+This is a forked version <br>
 Tests have been modified and are now passing. I tried to modify them the least possible. <br>
 Tests that were in "TODO" are commented out as it was supposedly new features to be done
 
