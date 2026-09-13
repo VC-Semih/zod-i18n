@@ -4,7 +4,7 @@
 
 This is my shot at adapting zod-i18n-map to zod v4.
 # Disclaimer
-This is a forked version, some features may be broken. <br>
+This is a forked version <br>
 Tests have been modified and are now passing. I tried to modify them the least possible. <br>
 Tests that were in "TODO" are commented out as it was supposedly new features to be done
 
